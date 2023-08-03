@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Sugma from "./sugma";
 
 export default function Home() {
     return (
@@ -89,7 +90,7 @@ export default function Home() {
                         </span>
                     </h2>
                     <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-                        Explore the Next.js 13 playground.
+                        balls
                     </p>
                 </a>
 
@@ -111,6 +112,7 @@ export default function Home() {
                     </p>
                 </a>
             </div>
+            <Sugma></Sugma>
         </main>
     );
 }
