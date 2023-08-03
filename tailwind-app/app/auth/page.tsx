@@ -32,7 +32,7 @@ export default function Auth() {
     } else {
         return (
             <div>
-                <button onClick={signInWithGoogle}>Sign In With Google</button>
+                <button onClick={signInWithGoogle}>Sign In With Google!</button>
             </div>
         );
     }
