@@ -2,7 +2,7 @@ import Logo from "./Components/logo";
 import Image from "next/image";
 export default function Home() {
     // joshua probably isn't going to look at the code that means i can say he's bald and he won't know
-    return (
+  return (
         <>
             <main className="flex flex-col flex-initial min-h-screen p-24">
                 <div className="flex flex-col md:flex-row">
@@ -46,7 +46,8 @@ export default function Home() {
                         ></Image>
                     </div>
                 </div>
-            </main>
+           </main>
         </>
+
     );
 }
