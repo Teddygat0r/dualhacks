@@ -6,7 +6,7 @@ import { python } from "@codemirror/lang-python";
 import { ViewUpdate } from "@codemirror/view";
 import { useState, useRef } from "react";
 import { usePython, PythonProvider } from "react-py";
-import { TestCase } from "@/Components/types";
+import { TestCase } from "@/app/Components/types";
 
 interface TestCaseOutput {
     input: string;

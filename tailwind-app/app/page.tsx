@@ -1,4 +1,4 @@
-import Logo from "./Components/logo";
+import Header from "./Components/header";
 import Image from "next/image";
 
 export default function Home() {
@@ -30,15 +30,9 @@ export default function Home() {
                         <div>
                             <a
                                 href="/auth"
-                                className="mt-4 inline-block px-4 py-2 bg-white text-black-500 border border-blue-500 rounded-lg hover:bg-blue-100 hover:border-blue-600 transition duration-300"
-                            >
-                                Log In
-                            </a>
-                            <a
-                                href="/auth"
                                 className="mt-4 inline-block px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition duration-300 text-right"
                             >
-                                Sign Up
+                                Get Started
                             </a>
                         </div>
                     </div>
