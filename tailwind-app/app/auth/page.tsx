@@ -9,10 +9,11 @@ import {
 } from "firebase/auth";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { setDoc, doc } from "firebase/firestore";
+import { useRouter } from "next/navigation";
 
 export default function Auth() {
     const [user] = useAuthState(auth);
-
+    let router = useRouter();
     const createUserObjectIfNotExists = async (result: UserCredential) => {
         const res = getAdditionalUserInfo(result);
         if (res === null) {
@@ -34,6 +35,7 @@ export default function Auth() {
         try {
             const result = await signInWithPopup(auth, googleProvider);
             await createUserObjectIfNotExists(result);
+            router.push("/");
         } catch (err) {
             console.error(err);
         }
