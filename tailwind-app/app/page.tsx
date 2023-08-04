@@ -1,5 +1,4 @@
 import Image from "next/image";
-import Sugma from "./sugma";
 
 export default function Home() {
     return (
@@ -112,7 +111,6 @@ export default function Home() {
                     </p>
                 </a>
             </div>
-            <Sugma></Sugma>
         </main>
     );
 }
