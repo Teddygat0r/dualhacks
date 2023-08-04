@@ -155,18 +155,18 @@ print(${fcnName}(${input}))
 
     return (
         <PythonProvider>
-            <div className="flex flex-col w-full h-full text-slate-700 bg-slate-500">
-                <div className="flex flex-col px-3 py-2">
+            <div className="flex flex-col w-full h-full text-slate-700">
+                <div className="flex flex-col px-3 py-2 h-[50%]">
                     <CodeMirror
                         value={code}
                         extensions={[python()]}
                         onChange={onChange}
-                        minHeight="500px"
-                        className="rounded-md"
+                        minHeight="450px"
+                        className="overflow-y-scroll rounded-md"
                     />
                 </div>
 
-                <div className="flex flex-col flex-grow px-3 py-2 overflow-scroll">
+                <div className="flex flex-col flex-grow px-3 py-2 overflow-y-scroll h-[50%]">
                     <div className="flex justify-between p-4 my-auto font-bold bg-slate-300 rounded-t-md ">
                         <p className="my-auto text-center">
                             Function: {fcnName}({params})
