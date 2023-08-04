@@ -16,10 +16,10 @@ export default function Home() {
                             aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa aaaaaaaaaaaaaaaaaaaa
                         </div>
                     </div>
-                    <div className="w-1/2 aspect-square text-right">
+                    <div className="w-full aspect-square text-right">
                         <Image
-                            height="200"
-                            width="200"
+                            height="400"
+                            width="400"
                             alt="no logo joever"
                             src="/demoimage.jpg"
                         ></Image>
