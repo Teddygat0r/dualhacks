@@ -1,14 +1,9 @@
 import Logo from "./Components/logo";
-import DemoImage from "./Components/demoimage";
+import Image from "next/image";
 export default function Home() {
     return (
         <>
-            <main className="flex flex-initial flex-col min-h-screen p-24 ">
-                <header className="w-full">
-                    <div>
-                        <Logo></Logo>
-                    </div>
-                </header>
+            <main className="flex flex-initial flex-col min-h-screen p-24">
                 <div className="flex flex-col md:flex-row">
                     <div className="w-1/2">
                         <h1>
@@ -21,12 +16,16 @@ export default function Home() {
                             aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa aaaaaaaaaaaaaaaaaaaa
                         </div>
                     </div>
-                    <div className="w-1/2 text-right">
-                        <DemoImage></DemoImage>
+                    <div className="w-1/2 aspect-square text-right">
+                        <Image
+                            height="200"
+                            width="200"
+                            alt="no logo joever"
+                            src="/demoimage.jpg"
+                        ></Image>
                     </div>
                 </div>
             </main>
         </>
     );
 }
-    
