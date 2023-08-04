@@ -10,9 +10,10 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import { setDoc, doc } from "firebase/firestore";
 import { useRouter } from "next/navigation";
 
-export default function Auth() {
+export default function Auth(red: string = "/") {
     const [user] = useAuthState(auth);
     let router = useRouter();
+
     const createUserObjectIfNotExists = async (result: UserCredential) => {
         const res = getAdditionalUserInfo(result);
         if (res === null) {
@@ -34,18 +35,29 @@ export default function Auth() {
         try {
             const result = await signInWithPopup(auth, googleProvider);
             await createUserObjectIfNotExists(result);
-            router.push("/");
+            router.push(red);
         } catch (err) {
             console.error(err);
         }
     };
 
     if (user) {
-        router.push("/");
+        router.push(red);
     } else {
         return (
-            <div>
-                <button onClick={signInWithGoogle}>Sign In With Google!</button>
+            <div className="grid h-screen place-items-center">
+                <div className="flex mb-28 items-center flex-col">
+                    <p className="font-white">
+                        Create an account or sign in with Google.
+                    </p>
+                    <br></br>
+                    <button
+                        className="bg-transparent hover:bg-blue-950 font-white font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded"
+                        onClick={signInWithGoogle}
+                    >
+                        Sign In With Google
+                    </button>
+                </div>
             </div>
         );
     }
