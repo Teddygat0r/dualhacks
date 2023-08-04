@@ -19,9 +19,6 @@
 .DS_Store
 *.pem
 
-#amongus
-amongus
-
 # debug
 npm-debug.log*
 yarn-debug.log*
