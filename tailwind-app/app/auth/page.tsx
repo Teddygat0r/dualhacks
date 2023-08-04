@@ -2,7 +2,6 @@
 import { auth, googleProvider, firestore } from "@/firebase/firebase";
 import {
     signInWithPopup,
-    signOut,
     getAdditionalUserInfo,
     UserCredential,
     AdditionalUserInfo,
@@ -41,21 +40,8 @@ export default function Auth() {
         }
     };
 
-    const logout = async () => {
-        try {
-            await signOut(auth);
-        } catch (err) {
-            console.error(err);
-        }
-    };
     if (user) {
-        return (
-            <div>
-                <p>Current User: {user.email}</p>
-                <br></br>
-                <button onClick={logout}>Logout</button>
-            </div>
-        );
+        router.push("/");
     } else {
         return (
             <div>
