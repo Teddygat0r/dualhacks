@@ -1,5 +1,6 @@
 import Header from "./Components/header";
 import Image from "next/image";
+
 export default function Home() {
     // joshua probably isn't going to look at the code that means i can say he's bald and he won't know
     return (
