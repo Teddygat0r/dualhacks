@@ -3,6 +3,7 @@ import { auth, googleProvider, firestore } from "@/firebase/firebase";
 import {
     signInWithPopup,
     getAdditionalUserInfo,
+    signOut,
     UserCredential,
     AdditionalUserInfo,
 } from "firebase/auth";
@@ -10,7 +11,7 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import { setDoc, doc } from "firebase/firestore";
 import { useRouter } from "next/navigation";
 
-export default function Auth(red: string = "/") {
+export default function Auth({ red }: { red: string }) {
     const [user] = useAuthState(auth);
     let router = useRouter();
 
@@ -41,23 +42,28 @@ export default function Auth(red: string = "/") {
         }
     };
 
-    if (user) {
-        router.push(red);
+    const logout = async () => {
+        try {
+            await signOut(auth);
+        } catch (err) {
+            console.error(err);
+        }
+    };
+
+    if (!user) {
+        return (
+            <button
+                className="bg-transparent hover:bg-blue-950 font-white font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded"
+                onClick={signInWithGoogle}
+            >
+                Sign In With Google
+            </button>
+        );
     } else {
         return (
-            <div className="grid h-screen place-items-center">
-                <div className="flex mb-28 items-center flex-col">
-                    <p className="font-white">
-                        Create an account or sign in with Google.
-                    </p>
-                    <br></br>
-                    <button
-                        className="bg-transparent hover:bg-blue-950 font-white font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded"
-                        onClick={signInWithGoogle}
-                    >
-                        Sign In With Google
-                    </button>
-                </div>
+            <div className="flex">
+                <p className="font-white mr-1">{user.email}</p>
+                <button onClick={logout}>Logout</button>
             </div>
         );
     }
