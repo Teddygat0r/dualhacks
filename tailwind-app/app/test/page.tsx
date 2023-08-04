@@ -1,6 +1,6 @@
-import { Problem } from "@/Components/types";
-import CodeBlock from "@/Components/CodeBlock";
-import ProblemDescription from "@/Components/ProblemDescription";
+import { Problem } from "@/app/Components/types";
+import CodeBlock from "@/app/Components/CodeBlock";
+import ProblemDescription from "@/app/Components/ProblemDescription";
 
 export default function Page() {
     const MyProblem: Problem = {

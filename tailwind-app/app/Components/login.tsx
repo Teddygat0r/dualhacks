@@ -62,8 +62,8 @@ export default function Auth({ red }: { red: string }) {
     } else {
         return (
             <div className="flex">
-                <p className="font-white mr-1">{user.email}</p>
-                <button onClick={logout}>Logout</button>
+                <p className="font-white mr-1 my-auto">Welcome, <b>{user.email}</b></p>
+                <button onClick={logout} className="bg-transparent hover:bg-blue-950 font-white font-semibold hover:text-white py-1.5 px-4 border border-blue-500 hover:border-transparent rounded">Logout</button>
             </div>
         );
     }
