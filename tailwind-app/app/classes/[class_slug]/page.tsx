@@ -30,6 +30,8 @@ export default function Page({ params }: { params: { class_slug: string } }) {
         ).withConverter(assignmentConverter),
     );
 
+    const [students, useStudents] = useState([]);
+
     const [isTeacher, setIsTeacher] = useState(false);
 
     const checkUserInClass = (userId: string, myclass: MyClass) => {
@@ -58,7 +60,7 @@ export default function Page({ params }: { params: { class_slug: string } }) {
     }, [user, authLoading, snapshot, classLoading]);
 
     return snapshot ? (
-        <main className="flex flex-col flex-initial gap-4 py-12 px-96 bg-slate-300">
+        <main className="flex flex-col flex-initial gap-4 py-12 m-auto px-[15%] bg-slate-300">
             <div className="relative flex w-full py-12 border border-black rounded-lg">
                 <Image
                     src="/stacked_waves.svg"
