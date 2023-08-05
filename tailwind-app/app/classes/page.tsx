@@ -51,6 +51,7 @@ export default function Page() {
             <div className="absolute top-[50%] left-[50%]">Loading...</div>
         </>
     ) : (
+        //TODO: go through every class the user is in and render it with the class.tsx thing
         <>
             <div className="w-[60%] flex flex-col gap-8"></div>
         </>
