@@ -22,12 +22,14 @@ const assignmentConverter: FirestoreDataConverter<Assignment> = {
         options: SnapshotOptions,
     ): Assignment {
         const data = snapshot.data(options);
+        const date = new Date(1970, 0, 1);
+        date.setSeconds(data.due.seconds);
         return {
             fcnName: data.fcnName,
             params: data.params,
             name: data.name,
             description: data.description,
-            due: data.due,
+            due: date,
             id: snapshot.id,
             testCases: data.testCases,
         };
