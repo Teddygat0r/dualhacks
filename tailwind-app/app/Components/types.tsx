@@ -34,6 +34,7 @@ export type User = {
     username: string;
     classes_att: DocumentReference[];
     classes_run: DocumentReference[];
+    id: string;
 };
 
 export interface Assignment extends Problem {

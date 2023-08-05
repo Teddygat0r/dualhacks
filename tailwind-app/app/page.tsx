@@ -29,7 +29,7 @@ export default function Home() {
                         </div>
                         <div>
                             <a
-                                href="/auth"
+                                href="/classes"
                                 className="inline-block px-4 py-2 mt-4 text-right text-white transition duration-300 bg-blue-500 rounded-lg hover:bg-blue-600"
                             >
                                 Get Started
