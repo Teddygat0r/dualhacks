@@ -17,7 +17,6 @@ import Class from "../Components/Class";
 import { getJSDocThisTag } from "typescript";
 import classConverter from "../_utils/ClassConverter";
 
-
 export default function Page() {
     // loads the user
     const [user, loading, error] = useAuthState(auth);
@@ -28,7 +27,7 @@ export default function Page() {
             userConverter,
         ),
     );
-    
+
     // if the user isn't logged in, send them to brazil(the home page)
     // otherwise get the user
     useEffect(() => {
@@ -52,7 +51,9 @@ export default function Page() {
         if (userObj != null) {
             (async () => {
                 const q = query(
-                    collection(firestore, "class").withConverter(classConverter),
+                    collection(firestore, "class").withConverter(
+                        classConverter,
+                    ),
                     where(
                         "__name__",
                         "in",
@@ -83,21 +84,22 @@ export default function Page() {
     }
     return (
         <>
-            <div className="w-[60%] flex flex-col gap-8">
-                    {classes ? (
-                        classes.map((item: MyClass) => {
-                            return (
-                                <Class
-                                    key={item.id}
-                                    {...item}
-                                    classUrl={user ? user.uid : "0"}
-                                ></Class>
-                            );
-                        })
-                    ) : (
-                        <></>
-                    )}
-                </div>
+            <div className="flex flex-col gap-8 items-center justify-center">
+                <h1><b className="text-xl"> These are the classes you are currently in:</b></h1>
+                {classes ? (
+                    classes.map((item: MyClass) => {
+                        return (
+                            <Class
+                                key={item.id}
+                                {...item}
+                                classUrl={user ? user.uid : "0"}
+                            ></Class>
+                        );
+                    })
+                ) : (
+                    <></>
+                )}
+            </div>
         </>
     );
 }
