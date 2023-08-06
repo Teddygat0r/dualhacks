@@ -12,6 +12,7 @@ import { query, where, collection } from "firebase/firestore";
 import Class from "../Components/Class";
 import { getJSDocThisTag } from "typescript";
 import classConverter from "../_utils/ClassConverter";
+import { useDocumentDataOnce } from "react-firebase-hooks/firestore";
 
 export default function Page() {
     // loads the user
