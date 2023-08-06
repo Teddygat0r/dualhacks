@@ -5,10 +5,6 @@ import { auth } from "@/firebase/firebase";
 import { useEffect, useState } from "react";
 import { redirect } from "next/navigation";
 import { firestore } from "@/firebase/firebase";
-import {
-    useDocumentDataOnce,
-    useCollectionDataOnce,
-} from "react-firebase-hooks/firestore";
 import userConverter from "../_utils/UserConverter";
 import { doc, getDoc, getDocs } from "@firebase/firestore";
 import { MyClass, User } from "../Components/types";
@@ -21,6 +17,7 @@ export default function Page() {
     // loads the user
     const [user, loading, error] = useAuthState(auth);
     const [userObj, setUserObj] = useState<User | null>(null);
+
     const [classes, setClasses] = useState<MyClass[]>([]);
     const [snapshot, userLoading] = useDocumentDataOnce<User>(
         doc(firestore, "user", user ? user.uid : "0").withConverter(

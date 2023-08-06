@@ -2,19 +2,28 @@
 
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "@/firebase/firebase";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { redirect } from "next/navigation";
 import {
     useDocumentDataOnce,
     useCollectionDataOnce,
 } from "react-firebase-hooks/firestore";
 import { firestore } from "@/firebase/firebase";
-import { doc, collection } from "firebase/firestore";
-import { MyClass, Assignment } from "@/app/Components/types";
+import {
+    doc,
+    collection,
+    getDoc,
+    getDocs,
+    query,
+    where,
+} from "firebase/firestore";
+import { MyClass, Assignment, User } from "@/app/Components/types";
 import classConverter from "@/app/_utils/ClassConverter";
 import assignmentConverter from "@/app/_utils/AssignmentConverter";
 import Image from "next/image";
 import ClassroomAssignment from "@/app/Components/ClassroomAssignment";
+import userConverter from "@/app/_utils/UserConverter";
+import ClassroomUserPreview from "@/app/Components/ClassroomUserPreview";
 
 export default function Page({ params }: { params: { class_slug: string } }) {
     const [user, authLoading] = useAuthState(auth);
@@ -23,6 +32,7 @@ export default function Page({ params }: { params: { class_slug: string } }) {
             classConverter,
         ),
     );
+
     const [assSnapshot, assLoading] = useCollectionDataOnce<Assignment>(
         collection(
             firestore,
@@ -30,9 +40,10 @@ export default function Page({ params }: { params: { class_slug: string } }) {
         ).withConverter(assignmentConverter),
     );
 
-    const [students, useStudents] = useState([]);
-
-    const [isTeacher, setIsTeacher] = useState(false);
+    const [students, setStudents] = useState<User[]>([]);
+    const [teacher, setTeacher] = useState<User | null>(null);
+    const isTeacher = useRef(false);
+    isTeacher.current = teacher?.id === user?.uid && teacher?.id !== null;
 
     const checkUserInClass = (userId: string, myclass: MyClass) => {
         if (
@@ -44,8 +55,6 @@ export default function Page({ params }: { params: { class_slug: string } }) {
             !(myclass.teacher.id == userId)
         ) {
             redirect("/");
-        } else {
-            setIsTeacher(myclass.teacher.id == userId);
         }
     };
 
@@ -55,13 +64,43 @@ export default function Page({ params }: { params: { class_slug: string } }) {
             if (!user) redirect("/");
             if (user && snapshot) {
                 checkUserInClass(user.uid, snapshot);
+                (async () => {
+                    const q = query(
+                        collection(firestore, "users").withConverter(
+                            userConverter,
+                        ),
+                        where(
+                            "__name__",
+                            "in",
+                            snapshot.students.map((item) => item.id),
+                        ),
+                    );
+                    const classUsers = await getDocs(q);
+                    let fbUserList: User[] = [];
+                    classUsers.forEach((doc) => {
+                        fbUserList.push(doc.data());
+                    });
+
+                    setStudents(fbUserList);
+                })();
+                (async () => {
+                    const fbUser = await getDoc(
+                        doc(
+                            firestore,
+                            "users",
+                            snapshot.teacher.id,
+                        ).withConverter(userConverter),
+                    );
+                    const data = fbUser.data();
+                    if (data !== undefined) setTeacher(data);
+                })();
             }
         }
     }, [user, authLoading, snapshot, classLoading]);
 
     return snapshot ? (
-        <main className="flex flex-col flex-initial gap-4 py-12 m-auto px-[15%] bg-slate-300">
-            <div className="relative flex w-full py-12 border border-black rounded-lg">
+        <main className="flex flex-col flex-initial gap-2 py-12 m-auto px-[15%] bg-slate-300 flex-grow w-full">
+            <div className="relative flex w-full py-12 mb-4 border border-black rounded-lg">
                 <Image
                     src="/stacked_waves.svg"
                     alt=""
@@ -73,29 +112,66 @@ export default function Page({ params }: { params: { class_slug: string } }) {
                     {snapshot.name}
                 </h1>
             </div>
-            <div className="relative flex gap-16">
-                <div className="w-[20%]">
+            <div className="relative flex gap-16 mx-8">
+                <div className="w-[20%] flex flex-col gap-4">
                     <div className="p-4 border border-opacity-50 rounded-lg border-slate-400">
                         <h1 className="mb-2 text-sm font-bold">About:</h1>
                         <p>{snapshot.desc}</p>
                     </div>
+                    <div className="p-4 border border-opacity-50 rounded-lg border-slate-400">
+                        <h1 className="mb-2 text-sm font-bold">Class Code:</h1>
+                        {isTeacher && (
+                            <button
+                                className="font-extrabold"
+                                onClick={() => {
+                                    navigator.clipboard.writeText(
+                                        snapshot.code,
+                                    );
+                                }}
+                            >
+                                {snapshot.code}
+                            </button>
+                        )}
+                    </div>
                 </div>
                 <div className="w-[60%] flex flex-col gap-8">
-                    {assSnapshot ? (
-                        assSnapshot.map((item: Assignment) => {
-                            return (
-                                <ClassroomAssignment
-                                    key={item.id}
-                                    {...item}
-                                    classUrl={params.class_slug}
-                                ></ClassroomAssignment>
-                            );
-                        })
-                    ) : (
-                        <></>
-                    )}
+                    {assSnapshot?.map((item: Assignment) => {
+                        return (
+                            <ClassroomAssignment
+                                key={item.id}
+                                {...item}
+                                classUrl={params.class_slug}
+                            ></ClassroomAssignment>
+                        );
+                    })}
                 </div>
-                <div className="w-[20%]">right</div>
+                <div className="w-[20%]">
+                    <div className="p-4 mb-4 border border-opacity-50 rounded-lg border-slate-400">
+                        <h1 className="mb-2 text-sm font-bold">Teacher</h1>
+                        <div className="flex flex-col gap-2">
+                            {teacher ? (
+                                <ClassroomUserPreview
+                                    {...teacher}
+                                ></ClassroomUserPreview>
+                            ) : (
+                                <></>
+                            )}
+                        </div>
+                    </div>
+                    <div className="p-4 border border-opacity-50 rounded-lg border-slate-400">
+                        <h1 className="mb-2 text-sm font-bold">Members</h1>
+                        <div className="flex flex-col gap-2">
+                            {students?.map((item: User) => {
+                                return (
+                                    <ClassroomUserPreview
+                                        key={item.id}
+                                        {...item}
+                                    ></ClassroomUserPreview>
+                                );
+                            })}
+                        </div>
+                    </div>
+                </div>
             </div>
         </main>
     ) : (
