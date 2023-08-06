@@ -4,7 +4,7 @@ import Auth from "./login";
 export default function Header() {
     return (
         <>
-            <div className="flex flex-row flex-initial h-16">
+            <div className="flex flex-row flex-initial flex-grow-0 h-16">
                 <div>
                     <Image
                         height="100"
@@ -14,7 +14,9 @@ export default function Header() {
                     ></Image>
                 </div>
                 <div className="ml-auto">
-                   <Auth red="/classes"></Auth>
+                    {
+                        //<Auth red="/classes"></Auth>
+                    }
                 </div>
             </div>
         </>

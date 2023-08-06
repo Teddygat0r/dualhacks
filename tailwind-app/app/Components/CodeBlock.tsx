@@ -6,7 +6,9 @@ import { python } from "@codemirror/lang-python";
 import { ViewUpdate } from "@codemirror/view";
 import { useState, useRef } from "react";
 import { usePython, PythonProvider } from "react-py";
-import { TestCase } from "@/app/Components/types";
+import { TestCase, Submission } from "@/app/Components/types";
+import { updateDoc, doc } from "firebase/firestore";
+import { firestore } from "@/firebase/firebase";
 
 interface TestCaseOutput {
     input: string;
@@ -19,12 +21,20 @@ export default function CodeBlock({
     fcnName,
     params,
     testCases,
+    submission = null,
+    baseUrl = "",
 }: {
     fcnName: string;
     params: string;
     testCases: TestCase[];
+    submission?: Submission | null;
+    baseUrl?: string;
 }) {
-    const [code, setCode] = useState(`def ${fcnName}(${params}):\n\n\n`);
+    const [code, setCode] = useState(
+        submission && submission.content !== ""
+            ? submission.content
+            : `def ${fcnName}(${params}):\n\n\n`,
+    );
     const [showCases, setShowCases] = useState(
         testCases
             .filter((item) => !item.hidden)
@@ -53,6 +63,7 @@ export default function CodeBlock({
     const runningRef = useRef(false);
     const stdoutRef = useRef("");
     const stderrRef = useRef("");
+    const bestSubmission = useRef<boolean[]>([]);
     runningRef.current = isRunning;
     stdoutRef.current = stdout;
     stderrRef.current = stderr;
@@ -108,6 +119,7 @@ print(${fcnName}(${input}))
             });
         let visCounter = 0;
         let haspassed = 3;
+        let passes = new Array(testCases.length).fill(false);
         for (let i = 0; i < testCases.length; i++) {
             const res = await runSingleCase(testCases[i].input);
 
@@ -136,7 +148,9 @@ print(${fcnName}(${input}))
                     break;
                 }
             }
+            passes[i] = true;
         }
+        bestSubmission.current = passes;
         setPassed(haspassed);
         setShowCases(visCaseResults);
     };
@@ -150,6 +164,22 @@ print(${fcnName}(${input}))
             return <span className="text-red-600">Incorrect Answer</span>;
         } else if (passed === 0) {
             return <span className="font-thin text-slate-700">Not Passed</span>;
+        }
+    };
+
+    const updateSubmission = async () => {
+        if (submission) {
+            const newSub = submission;
+            newSub.content = code;
+            newSub.unitTestResult = bestSubmission.current;
+            const res = await updateDoc(
+                doc(firestore, baseUrl, submission.id),
+                {
+                    content: code,
+                    unitTestResult: bestSubmission.current,
+                },
+            );
+            console.log(res);
         }
     };
 
@@ -186,6 +216,16 @@ print(${fcnName}(${input}))
                                 ) : (
                                     <p>Test Cases</p>
                                 )}
+                            </button>
+                            <button
+                                disabled={isLoading || isRunning}
+                                onClick={(e) => {
+                                    e.preventDefault();
+                                    updateSubmission();
+                                }}
+                                className="px-4 py-2 text-black duration-150 bg-red-400 rounded-md hover:bg-red-500"
+                            >
+                                Save Results
                             </button>
                         </div>
                     </div>

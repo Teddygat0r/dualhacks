@@ -37,6 +37,13 @@ export type User = {
     id: string;
 };
 
+export type Submission = {
+    student: DocumentReference;
+    content: string;
+    unitTestResult: boolean[];
+    id: string;
+};
+
 export interface Assignment extends Problem {
     due: Date;
     id: string;

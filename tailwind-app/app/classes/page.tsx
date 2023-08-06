@@ -5,14 +5,9 @@ import { auth } from "@/firebase/firebase";
 import { useEffect, useState } from "react";
 import { redirect } from "next/navigation";
 import { firestore } from "@/firebase/firebase";
-import {
-    useDocumentDataOnce,
-    useCollectionDataOnce,
-} from "react-firebase-hooks/firestore";
 import userConverter from "../_utils/UserConverter";
-import { doc } from "@firebase/firestore";
+import { doc, getDoc } from "@firebase/firestore";
 import { User } from "../Components/types";
-import Class from "../Components/Class";
 
 /*
 - load the user
@@ -25,24 +20,28 @@ import Class from "../Components/Class";
 export default function Page() {
     // loads the user
     const [user, loading, error] = useAuthState(auth);
-
-    const [snapshot, userLoading] = useDocumentDataOnce<User>(
-        doc(firestore, "user", user ? user.uid : "0").withConverter(
-            userConverter,
-        ),
-    );
+    const [userObj, setUserObj] = useState<User | null>(null);
 
     // if the user isn't logged in, send them to brazil(the home page)
     useEffect(() => {
         if (!loading && !user) {
             redirect("/");
+        } else if (user && !loading) {
+            (async () => {
+                const fbUser = await getDoc(
+                    doc(firestore, "users", user.uid).withConverter(
+                        userConverter,
+                    ),
+                );
+                const data = fbUser.data();
+                if (data !== undefined) setUserObj(data);
+            })();
         }
     }, [user, loading]);
 
     useEffect(() => {
-        console.log(snapshot);
-        console.log(userLoading);
-    }, [snapshot, userLoading]);
+        console.log(userObj);
+    }, [userObj]);
 
     //get all the classes the user is in
 
