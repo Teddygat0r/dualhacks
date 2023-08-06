@@ -86,6 +86,14 @@ export default function Page() {
         <>
             <div className="flex flex-col gap-8 items-center justify-center">
                 <h1><b className="text-xl"> These are the classes you are currently in:</b></h1>
+                <div>
+                            <a
+                                href="/classes/create"
+                                className="inline-block px-4 py-2 mt-4 text-right text-white transition duration-300 bg-blue-500 rounded-lg hover:bg-blue-600"
+                            >
+                                Create a classroom
+                            </a>
+                        </div>
                 {classes ? (
                     classes.map((item: MyClass) => {
                         return (
