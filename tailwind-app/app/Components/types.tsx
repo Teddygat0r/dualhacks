@@ -1,3 +1,5 @@
+import { DocumentReference } from "firebase/firestore";
+
 export type InputOutput = {
     input: any[];
     output: any[];
@@ -16,3 +18,33 @@ export type Problem = {
     description: string;
     testCases: TestCase[];
 };
+
+export type MyClass = {
+    code: string;
+    desc: string;
+    name: string;
+    students: DocumentReference[];
+    teacher: DocumentReference;
+    id: string;
+};
+
+export type User = {
+    email: string;
+    profile_picture: string;
+    username: string;
+    classes_att: DocumentReference[];
+    classes_run: DocumentReference[];
+    id: string;
+};
+
+export type Submission = {
+    student: DocumentReference;
+    content: string;
+    unitTestResult: boolean[];
+    id: string;
+};
+
+export interface Assignment extends Problem {
+    due: Date;
+    id: string;
+}
