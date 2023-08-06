@@ -13,7 +13,9 @@ export default function Page() {
 
     return (
         <main className="flex flex-col flex-initial min-h-screen p-24">
-            <div>hi</div>
+            <div className="text-xl">
+                hi do you wanna see some of ur classes, well it looks like u have skill issue syndrome
+            </div>
         </main>
     );
 }
