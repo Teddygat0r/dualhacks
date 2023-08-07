@@ -179,7 +179,7 @@ print(${fcnName}(${input}))
                     unitTestResult: bestSubmission.current,
                 },
             );
-            console.log(res);
+            alert("Saved Results");
         }
     };
 

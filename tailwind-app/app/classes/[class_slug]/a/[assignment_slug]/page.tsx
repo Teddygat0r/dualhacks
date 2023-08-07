@@ -27,6 +27,9 @@ import assignmentConverter from "@/app/_utils/AssignmentConverter";
 import submissionConverter from "@/app/_utils/SubmissionConverter";
 import ProblemDescription from "@/app/Components/ProblemDescription";
 import CodeBlock from "@/app/Components/CodeBlock";
+import userConverter from "@/app/_utils/UserConverter";
+import Profile from "./profile";
+import ViewSubmission from "./viewSubmission";
 
 export default function Page({
     params,
@@ -48,9 +51,15 @@ export default function Page({
     );
 
     const [submission, setSubmission] = useState<Submission | null>(null);
-    const [teacher, setTeacher] = useState<User | null>(null);
+    const [submissions, setSubmissions] = useState<Submission[]>([]);
+    const [studentsList, setStudentsList] = useState<User[]>([]);
+    const [selectedId, setSelectedId] = useState(-1);
+
     const isTeacher = useRef(false);
-    isTeacher.current = teacher?.id === user?.uid && teacher?.id !== null;
+    isTeacher.current =
+        snapshot?.teacher.id === user?.uid &&
+        snapshot !== undefined &&
+        snapshot !== null;
 
     const checkUserInClass = (userId: string, myclass: MyClass) => {
         if (
@@ -59,10 +68,21 @@ export default function Page({
                     return item.id;
                 })
                 .includes(userId) &&
-            !(myclass.teacher.id == userId)
+            !(myclass.teacher.id === userId)
         ) {
             redirect("/");
         }
+    };
+
+    const handleProfileClick = (index: number) => {
+        const id = studentsList[index].id;
+        for (let i = 0; i < submissions.length; i++) {
+            if (submissions[i].student.id === id) {
+                setSelectedId(i);
+                return;
+            }
+        }
+        setSelectedId(-1);
     };
 
     useEffect(() => {
@@ -71,42 +91,69 @@ export default function Page({
             if (!user) redirect("/");
             if (user && snapshot && assignment) {
                 checkUserInClass(user.uid, snapshot);
-                (async () => {
-                    const q = query(
-                        collection(
-                            firestore,
-                            `class/${params.class_slug}/assignment/${params.assignment_slug}/submission`,
-                        ).withConverter(submissionConverter),
-                        where(
-                            "student",
-                            "==",
-                            doc(firestore, "users", user?.uid ?? "0"),
-                        ),
-                    );
-                    const res = await getDocs(q);
-
-                    if (res.size === 0) {
-                        const sub: Submission = {
-                            student: doc(firestore, "users", user.uid),
-                            content: "",
-                            unitTestResult: new Array(
-                                assignment?.testCases.length,
-                            ).fill(false),
-                            id: "",
-                        };
-                        const docsetted = await addDoc(
+                if (snapshot.teacher.id !== user.uid)
+                    (async () => {
+                        const q = query(
                             collection(
                                 firestore,
                                 `class/${params.class_slug}/assignment/${params.assignment_slug}/submission`,
                             ).withConverter(submissionConverter),
-                            sub,
+                            where(
+                                "student",
+                                "==",
+                                doc(firestore, "users", user?.uid ?? "0"),
+                            ),
                         );
-                        sub.id = docsetted.id;
-                        setSubmission(sub);
-                    } else {
-                        setSubmission(res.docs[0].data());
-                    }
-                })();
+                        const res = await getDocs(q);
+
+                        if (res.size === 0) {
+                            const sub: Submission = {
+                                student: doc(firestore, "users", user.uid),
+                                content: "",
+                                unitTestResult: new Array(
+                                    assignment?.testCases.length,
+                                ).fill(false),
+                                id: "",
+                            };
+                            const docsetted = await addDoc(
+                                collection(
+                                    firestore,
+                                    `class/${params.class_slug}/assignment/${params.assignment_slug}/submission`,
+                                ).withConverter(submissionConverter),
+                                sub,
+                            );
+                            sub.id = docsetted.id;
+                            setSubmission(sub);
+                        } else {
+                            setSubmission(res.docs[0].data());
+                        }
+                    })();
+                else if (snapshot.teacher.id === user.uid) {
+                    (async () => {
+                        const q = query(
+                            collection(
+                                firestore,
+                                `class/${params.class_slug}/assignment/${params.assignment_slug}/submission`,
+                            ).withConverter(submissionConverter),
+                        );
+                        const res = await getDocs(q);
+                        setSubmissions(res.docs.map((doc) => doc.data()));
+                    })();
+                    (async () => {
+                        const q = query(
+                            collection(firestore, `users`).withConverter(
+                                userConverter,
+                            ),
+                            where(
+                                "__name__",
+                                "in",
+                                snapshot.students.map((item) => item.id),
+                            ),
+                        );
+                        const res = await getDocs(q);
+                        setStudentsList(res.docs.map((doc) => doc.data()));
+                    })();
+                }
             }
         }
     }, [
@@ -121,7 +168,7 @@ export default function Page({
 
     return (
         <main className="flex h-full grow">
-            {assignment && submission ? (
+            {assignment && submission && !isTeacher.current ? (
                 <>
                     <div className="w-[50%] bg-slate-500">
                         <ProblemDescription
@@ -140,7 +187,42 @@ export default function Page({
                     </div>
                 </>
             ) : (
-                <div>hi</div>
+                <div className="flex w-full bg-slate-500">
+                    <div className="w-[20%] bg-slate-300 flex flex-col">
+                        <div className="py-8 border-b border-slate-500">
+                            <h1 className="text-xl font-bold text-center">
+                                Students
+                            </h1>
+                        </div>
+                        <div className="flex flex-col gap-2 mt-8">
+                            {studentsList.map((std, index) => (
+                                <button
+                                    key={index}
+                                    onClick={() => {
+                                        handleProfileClick(index);
+                                    }}
+                                >
+                                    <Profile user={std}></Profile>
+                                </button>
+                            ))}
+                        </div>
+                    </div>
+                    <div className="grow">
+                        {selectedId < submissions.length &&
+                        selectedId !== -1 ? (
+                            <ViewSubmission
+                                submission={submissions[selectedId]}
+                            ></ViewSubmission>
+                        ) : (
+                            <div className="flex h-full m-auto align-middle">
+                                <p className="m-auto text-center text-white">
+                                    Not Selected or not Student has not started
+                                    assignment.
+                                </p>
+                            </div>
+                        )}
+                    </div>
+                </div>
             )}
         </main>
     );
