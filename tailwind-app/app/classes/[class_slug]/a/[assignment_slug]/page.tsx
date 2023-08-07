@@ -53,7 +53,7 @@ export default function Page({
     const [submission, setSubmission] = useState<Submission | null>(null);
     const [submissions, setSubmissions] = useState<Submission[]>([]);
     const [studentsList, setStudentsList] = useState<User[]>([]);
-    const [selectedId, setSelectedId] = useState(0);
+    const [selectedId, setSelectedId] = useState(-1);
 
     const isTeacher = useRef(false);
     isTeacher.current =
@@ -72,6 +72,17 @@ export default function Page({
         ) {
             redirect("/");
         }
+    };
+
+    const handleProfileClick = (index: number) => {
+        const id = studentsList[index].id;
+        for (let i = 0; i < submissions.length; i++) {
+            if (submissions[i].student.id === id) {
+                setSelectedId(i);
+                return;
+            }
+        }
+        setSelectedId(-1);
     };
 
     useEffect(() => {
@@ -185,19 +196,30 @@ export default function Page({
                         </div>
                         <div className="flex flex-col gap-2 mt-8">
                             {studentsList.map((std, index) => (
-                                <button key={index}>
+                                <button
+                                    key={index}
+                                    onClick={() => {
+                                        handleProfileClick(index);
+                                    }}
+                                >
                                     <Profile user={std}></Profile>
                                 </button>
                             ))}
                         </div>
                     </div>
                     <div className="grow">
-                        {selectedId < submissions.length ? (
+                        {selectedId < submissions.length &&
+                        selectedId !== -1 ? (
                             <ViewSubmission
                                 submission={submissions[selectedId]}
                             ></ViewSubmission>
                         ) : (
-                            <></>
+                            <div className="flex h-full m-auto align-middle">
+                                <p className="m-auto text-center text-white">
+                                    Not Selected or not Student has not started
+                                    assignment.
+                                </p>
+                            </div>
                         )}
                     </div>
                 </div>
