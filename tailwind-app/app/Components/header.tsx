@@ -7,25 +7,25 @@ export default function Header() {
             <title>
                 LearnMentor Connect
             </title>
-            <div className="flex flex-row flex-initial h-16">
+            <div className="flex flex-row flex-initial h-24">
                 <div>
                     <a href="/">
                         <Image
-                            height="67"
-                            width="67"
-                            alt="no logo joever"
-                            src="/logo.PNG"
+                            height="80"
+                            width="80"
+                            alt="W logo"
+                            src="/WebsiteLogo.png"
                         ></Image>
                     </a>
                 </div>
                 <div className="pl-5 my-auto mr-auto">
                     <a  href="/"
-                        className="text-[25px]"
+                        className="text-[40px]"
                     >
                        <b>LearnMentor Connect</b>
                     </a>
                 </div>
-                <div className="pr-5 my-auto ml-auto">
+                <div className="pr-6 my-auto ml-auto text-[30px]">
                    <Auth red="/classes"></Auth>
                 </div>
             </div>

@@ -9,9 +9,8 @@ export default function Home() {
                 <div className="flex flex-col md:flex-row">
                     <div className="w-1/2">
                         <h1>
-                            <b className="text-[60px]">
-                                Empowering Education with AI-Assisted Learning
-                                Management
+                            <b className="text-[34px]">
+                                Empowering Education with AI-Assisted Learning Management
                             </b>
                         </h1>
                         <div className="text-xl">
@@ -30,7 +29,7 @@ export default function Home() {
                         <div>
                             <a
                                 href="/auth"
-                                className="inline-block px-4 py-2 mt-4 text-right text-white transition duration-300 bg-blue-500 rounded-lg hover:bg-blue-600"
+                                className="inline-block px-8 py-4 mt-4 text-right text-blue-500 text-[36px] transition border-blue-500 border-[3px] duration-300 rounded-lg hover:text-white hover:bg-blue-600"
                             >
                                 Get Started
                             </a>
@@ -38,14 +37,15 @@ export default function Home() {
                     </div>
                     <div className="w-1/2 text-right">
                         <Image
-                            height="300"
-                            width="300"
+                            height="600"
+                            width="600"
                             alt="no logo joever"
-                            src="/demoimage.jpg"
+                            src="/DemoImage.png"
                             className="w-full"
                         ></Image>
                     </div>
                 </div>
+
             </main>
         </>
     );
