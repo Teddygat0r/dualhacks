@@ -51,7 +51,7 @@ export default function Page({
                     });
                 }
             })();
-            redirect("/");
+            redirect("/classes");
         }
     }, [user, loading, classes, classesLoading]);
 

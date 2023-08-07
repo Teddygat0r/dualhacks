@@ -24,6 +24,8 @@ import Image from "next/image";
 import ClassroomAssignment from "@/app/Components/ClassroomAssignment";
 import userConverter from "@/app/_utils/UserConverter";
 import ClassroomUserPreview from "@/app/Components/ClassroomUserPreview";
+import Link from "next/link";
+import { BsPlusCircleDotted } from "react-icons/bs";
 
 export default function Page({ params }: { params: { class_slug: string } }) {
     const [user, authLoading] = useAuthState(auth);
@@ -138,6 +140,22 @@ export default function Page({ params }: { params: { class_slug: string } }) {
                     )}
                 </div>
                 <div className="w-[60%] flex flex-col gap-8">
+                    {isTeacher.current ? (
+                        <Link href={`/classes/${params.class_slug}/a/new`}>
+                            <div className="flex pr-4 border border-opacity-50 rounded-lg border-slate-400 bg-slate-200">
+                                <div className="flex-grow-0 p-4 my-auto border-r border-slate-700">
+                                    <BsPlusCircleDotted></BsPlusCircleDotted>
+                                </div>
+                                <div className="flex flex-col justify-center grow">
+                                    <h1 className="ml-4 text-xl font-semibold">
+                                        Create new Assignment
+                                    </h1>
+                                </div>
+                            </div>
+                        </Link>
+                    ) : (
+                        <></>
+                    )}
                     {assSnapshot?.map((item: Assignment) => {
                         return (
                             <ClassroomAssignment
