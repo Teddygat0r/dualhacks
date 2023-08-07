@@ -64,7 +64,7 @@ export default function MakeClass() {
             <label>Name of Class:</label>
             <div className="flex flex-col flex-initial">
                 <input
-                    className="border border-black rounded-lg"
+                    className="border border-black rounded-lg w-48"
                     value={className}
                     onChange={(e) => {
                         setClassName(e.target.value);
@@ -73,13 +73,13 @@ export default function MakeClass() {
             </div>
             <label>Description of Class:</label>
             <div className="flex flex-col flex-initial">
-                <input
+                <textarea
                     className="border border-black rounded-lg"
                     value={classDesc}
                     onChange={(e) => {
                         setClassDesc(e.target.value);
                     }}
-                ></input>
+                ></textarea>
             </div>
             <div>
                 <button
