@@ -7,7 +7,7 @@ export default function Header() {
             <title>
                 LearnMentor Connect
             </title>
-            <div className="flex flex-row flex-initial h-16 bg-green-500">
+            <div className="flex flex-row flex-initial h-16">
                 <div>
                     <a href="/">
                         <Image
