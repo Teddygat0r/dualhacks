@@ -1,6 +1,9 @@
 import Image from "next/image";
-import { useAuthState } from "react-firebase-hooks/auth";
-import Auth from "./login";
+import dynamic from "next/dynamic";
+const Auth = dynamic(() => import("./login"), {
+    ssr: false,
+});
+
 export default function Header() {
     return (
         <>
@@ -13,11 +16,7 @@ export default function Header() {
                         src="/logo.PNG"
                     ></Image>
                 </div>
-                <div className="ml-auto">
-                    {
-                        //<Auth red="/classes"></Auth>
-                    }
-                </div>
+                <div className="ml-auto">{<Auth red="/classes"></Auth>}</div>
             </div>
         </>
     );

@@ -10,7 +10,6 @@ import { doc, getDoc, getDocs } from "@firebase/firestore";
 import { MyClass, User } from "../Components/types";
 import { query, where, collection } from "firebase/firestore";
 import Class from "../Components/Class";
-import { getJSDocThisTag } from "typescript";
 import classConverter from "../_utils/ClassConverter";
 import { useDocumentDataOnce } from "react-firebase-hooks/firestore";
 
@@ -46,7 +45,10 @@ export default function Page() {
         }
     }, [user, loading]);
     useEffect(() => {
-        if (userObj != null) {
+        if (
+            userObj != null &&
+            userObj.classes_att.concat(userObj.classes_run).length !== 0
+        ) {
             (async () => {
                 const q = query(
                     collection(firestore, "class").withConverter(
@@ -82,25 +84,24 @@ export default function Page() {
     }
     return (
         <>
-            <div className="flex flex-col gap-8 items-center justify-center">
-                <h1><b className="text-xl"> These are the classes you are currently in:</b></h1>
+            <div className="flex flex-col items-center justify-center gap-8">
+                <h1>
+                    <b className="text-xl">
+                        {" "}
+                        These are the classes you are currently in:
+                    </b>
+                </h1>
                 <div>
-                            <a
-                                href="/classes/create"
-                                className="inline-block px-4 py-2 mt-4 text-right text-white transition duration-300 bg-blue-500 rounded-lg hover:bg-blue-600"
-                            >
-                                Create a classroom
-                            </a>
-                        </div>
+                    <a
+                        href="/classes/create"
+                        className="inline-block px-4 py-2 mt-4 text-right text-white transition duration-300 bg-blue-500 rounded-lg hover:bg-blue-600"
+                    >
+                        Create a classroom
+                    </a>
+                </div>
                 {classes ? (
                     classes.map((item: MyClass) => {
-                        return (
-                            <Class
-                                key={item.id}
-                                {...item}
-                                classUrl={user ? user.uid : "0"}
-                            ></Class>
-                        );
+                        return <Class key={item.id} {...item}></Class>;
                     })
                 ) : (
                     <></>

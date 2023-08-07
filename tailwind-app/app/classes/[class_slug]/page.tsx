@@ -43,7 +43,7 @@ export default function Page({ params }: { params: { class_slug: string } }) {
     const [students, setStudents] = useState<User[]>([]);
     const [teacher, setTeacher] = useState<User | null>(null);
     const isTeacher = useRef(false);
-    isTeacher.current = teacher?.id === user?.uid && teacher?.id !== null;
+    isTeacher.current = teacher?.id === user?.uid && teacher !== null;
 
     const checkUserInClass = (userId: string, myclass: MyClass) => {
         if (
@@ -118,9 +118,12 @@ export default function Page({ params }: { params: { class_slug: string } }) {
                         <h1 className="mb-2 text-sm font-bold">About:</h1>
                         <p>{snapshot.desc}</p>
                     </div>
-                    <div className="p-4 border border-opacity-50 rounded-lg border-slate-400">
-                        <h1 className="mb-2 text-sm font-bold">Class Code:</h1>
-                        {isTeacher && (
+                    {isTeacher.current && (
+                        <div className="p-4 border border-opacity-50 rounded-lg border-slate-400">
+                            <h1 className="mb-2 text-sm font-bold">
+                                Class Code:
+                            </h1>
+
                             <button
                                 className="font-extrabold"
                                 onClick={() => {
@@ -131,8 +134,8 @@ export default function Page({ params }: { params: { class_slug: string } }) {
                             >
                                 {snapshot.code}
                             </button>
-                        )}
-                    </div>
+                        </div>
+                    )}
                 </div>
                 <div className="w-[60%] flex flex-col gap-8">
                     {assSnapshot?.map((item: Assignment) => {
