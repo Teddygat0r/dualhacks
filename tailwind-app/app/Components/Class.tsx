@@ -2,10 +2,6 @@ import { MyClass } from "./types";
 import Link from "next/link";
 import Image from "next/image";
 
-interface ClassProps extends MyClass {
-    classUrl: string;
-}
-
 export default function Class({
     code,
     desc,
@@ -13,9 +9,9 @@ export default function Class({
     students,
     teacher,
     id,
-}: ClassProps) {
+}: MyClass) {
     return (
-        <div>
+        <Link href={`/classes/${id}`}>
             <div className="relative flex w-full py-6 border border-black rounded-lg">
                 <Image
                     src="/stacked_waves.svg"
@@ -24,7 +20,7 @@ export default function Class({
                     width="600"
                     height="400"
                 />
-                <h1 className="z-10 m-auto text-4xl font-semibold text-center text-white mx-10">
+                <h1 className="z-10 m-auto mx-10 text-4xl font-semibold text-center text-white">
                     {name}
                 </h1>
             </div>
@@ -36,6 +32,6 @@ export default function Class({
                     </div>
                 </div>
             </div>
-        </div>
+        </Link>
     );
 }

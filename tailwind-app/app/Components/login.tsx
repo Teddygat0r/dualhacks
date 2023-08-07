@@ -50,21 +50,33 @@ export default function Auth({ red }: { red: string }) {
         }
     };
 
-    if (!user) {
-        return (
-            <button
-                className="bg-transparent hover:bg-blue-950 font-white font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded"
-                onClick={signInWithGoogle}
-            >
-                Sign In With Google
-            </button>
-        );
-    } else {
-        return (
-            <div className="flex">
-                <p className="font-white mr-1 my-auto">Welcome, <b>{user.email}</b></p>
-                <button onClick={logout} className="bg-transparent hover:bg-blue-950 font-white font-semibold hover:text-white py-1.5 px-4 border border-blue-500 hover:border-transparent rounded">Logout</button>
-            </div>
-        );
-    }
+    return (
+        <div className="flex" suppressHydrationWarning>
+            {user ? (
+                <>
+                    <p
+                        className="my-auto mr-1 font-white"
+                        suppressHydrationWarning
+                    >
+                        Welcome, <b>{user.email}</b>
+                    </p>
+                    <button
+                        onClick={logout}
+                        className="bg-transparent hover:bg-blue-950 font-white font-semibold hover:text-white py-1.5 px-4 border border-blue-500 hover:border-transparent rounded"
+                    >
+                        Logout
+                    </button>
+                </>
+            ) : (
+                <>
+                    <button
+                        className="px-4 py-2 font-semibold bg-transparent border border-blue-500 rounded hover:bg-blue-950 font-white hover:text-white hover:border-transparent"
+                        onClick={signInWithGoogle}
+                    >
+                        Sign In With Google
+                    </button>
+                </>
+            )}
+        </div>
+    );
 }
