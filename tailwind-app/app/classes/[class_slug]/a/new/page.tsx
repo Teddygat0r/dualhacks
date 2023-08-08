@@ -386,6 +386,7 @@ print(${fcnName}(${input}))
                                                 setNewCase(e.target.value);
                                             }}
                                         />
+                                        <button>Generate Case</button>
                                         <button
                                             className="px-3 py-1 duration-150 bg-blue-300 border rounded-md border-slate-700 hover:bg-blue-400"
                                             onClick={() => {

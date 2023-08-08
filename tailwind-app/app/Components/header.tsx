@@ -1,22 +1,29 @@
 import Image from "next/image";
-import dynamic from "next/dynamic";
-const Auth = dynamic(() => import("./login"), {
-    ssr: false,
-});
-
+import { useAuthState } from "react-firebase-hooks/auth";
+import Auth from "./login";
 export default function Header() {
     return (
         <>
-            <div className="flex flex-row flex-initial flex-grow-0 h-16">
+            <title>LearnMentor Connect</title>
+            <div className="flex flex-row flex-initial h-24">
                 <div>
-                    <Image
-                        height="100"
-                        width="100"
-                        alt="no logo joever"
-                        src="/logo.PNG"
-                    ></Image>
+                    <a href="/">
+                        <Image
+                            height="80"
+                            width="80"
+                            alt="W logo"
+                            src="/WebsiteLogo.png"
+                        ></Image>
+                    </a>
                 </div>
-                <div className="ml-auto">{<Auth red="/classes"></Auth>}</div>
+                <div className="pl-5 my-auto mr-auto">
+                    <a href="/" className="text-[40px]">
+                        <b>LearnMentor Connect</b>
+                    </a>
+                </div>
+                <div className="pr-6 my-auto ml-auto text-[30px]">
+                    <Auth red="/classes"></Auth>
+                </div>
             </div>
         </>
     );
