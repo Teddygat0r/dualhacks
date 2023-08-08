@@ -66,25 +66,27 @@ export default function Page({ params }: { params: { class_slug: string } }) {
             if (!user) redirect("/");
             if (user && snapshot) {
                 checkUserInClass(user.uid, snapshot);
-                (async () => {
-                    const q = query(
-                        collection(firestore, "users").withConverter(
-                            userConverter,
-                        ),
-                        where(
-                            "__name__",
-                            "in",
-                            snapshot.students.map((item) => item.id),
-                        ),
-                    );
-                    const classUsers = await getDocs(q);
-                    let fbUserList: User[] = [];
-                    classUsers.forEach((doc) => {
-                        fbUserList.push(doc.data());
-                    });
+                if (snapshot.students.length > 0) {
+                    (async () => {
+                        const q = query(
+                            collection(firestore, "users").withConverter(
+                                userConverter,
+                            ),
+                            where(
+                                "__name__",
+                                "in",
+                                snapshot.students.map((item) => item.id),
+                            ),
+                        );
+                        const classUsers = await getDocs(q);
+                        let fbUserList: User[] = [];
+                        classUsers.forEach((doc) => {
+                            fbUserList.push(doc.data());
+                        });
 
-                    setStudents(fbUserList);
-                })();
+                        setStudents(fbUserList);
+                    })();
+                }
                 (async () => {
                     const fbUser = await getDoc(
                         doc(
@@ -130,7 +132,7 @@ export default function Page({ params }: { params: { class_slug: string } }) {
                                 className="font-extrabold"
                                 onClick={() => {
                                     navigator.clipboard.writeText(
-                                        snapshot.code,
+                                        `https://dualhacks.vercel.app/classes/join/${snapshot.code}`,
                                     );
                                 }}
                             >

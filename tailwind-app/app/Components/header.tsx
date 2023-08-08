@@ -7,7 +7,7 @@ const Auth = dynamic(() => import("./login"), {
 export default function Header() {
     return (
         <>
-            <div className="flex flex-row flex-initial h-24 bg-slate-300">
+            <div className="flex flex-row flex-initial h-24 bg-gray-300">
                 <div>
                     <a href="/">
                         <Image

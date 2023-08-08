@@ -15,6 +15,7 @@ import { python } from "@codemirror/lang-python";
 import { Configuration, OpenAIApi } from "openai";
 import Child from "./child";
 import assignmentConverter from "@/app/_utils/AssignmentConverter";
+import { useRouter } from "next/navigation";
 
 interface TestCaseOutput {
     input: string;
@@ -61,6 +62,7 @@ export default function Page({ params }: { params: { class_slug: string } }) {
     const runningRef = useRef(false);
     const stdoutRef = useRef("");
     const stderrRef = useRef("");
+    const { push } = useRouter();
 
     runningRef.current = isRunning;
     stdoutRef.current = stdout;
@@ -230,6 +232,12 @@ print(${fcnName}(${input}))
                 break;
             }
         }
+        let temptest = [...testCases];
+        for (let i = 0; i < temptest.length; i++) {
+            temptest[i].output =
+                visCaseResults[i].stdout + visCaseResults[i].stderr;
+        }
+        setTestCases(temptest);
         setPassed(haspassed);
         setResults(visCaseResults);
     };
@@ -290,7 +298,7 @@ print(${fcnName}(${input}))
                 },
             );
         })();
-        redirect(`/class/${params.class_slug}`);
+        push(`/classes/${params.class_slug}`);
     };
 
     return (
