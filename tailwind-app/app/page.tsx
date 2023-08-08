@@ -10,21 +10,16 @@ export default function Home() {
                     <div className="w-1/2">
                         <h1>
                             <b className="text-[60px]">
-                                Empowering Education with AI-Assisted Learning
-                                Management
+                                Empowering Coding Education with AI
                             </b>
                         </h1>
-                        <div className="text-xl">
-                            Introducing LearnMentor Connect, the revolutionary
-                            educational tool that combines the power of AI with
-                            traditional teaching methods. Designed to enhance
-                            the teaching and learning experience, LearnMentor
-                            Connect brings together educators, students, and
-                            Language Models (LLMs) in an innovative platform.
-                            Seamlessly integrated with familiar features of
-                            learning management systems, LearnMentor Connect
-                            offers personalized assignment creation assistance
-                            for teachers and comprehensive assignment
+                        <div className="mt-4 text-xl">
+                            Introducing ByTech, the revolutionary educational
+                            tool that combines the power of AI with traditional
+                            teaching methods. Seamlessly integrated with
+                            familiar features of learning management systems,
+                            ByTech offers personalized assignment creation
+                            assistance for teachers and comprehensive assignment
                             explanations for students.
                         </div>
                         <div>
@@ -38,10 +33,10 @@ export default function Home() {
                     </div>
                     <div className="w-1/2 text-right">
                         <Image
-                            height="300"
-                            width="300"
+                            height="1280"
+                            width="9999"
                             alt="no logo joever"
-                            src="/demoimage.jpg"
+                            src="/banner.png"
                             className="w-full"
                         ></Image>
                     </div>

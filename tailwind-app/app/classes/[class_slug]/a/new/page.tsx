@@ -12,7 +12,7 @@ import ProblemDescription from "@/app/Components/ProblemDescription";
 import { PythonProvider, usePython } from "react-py";
 import CodeMirror from "@uiw/react-codemirror";
 import { python } from "@codemirror/lang-python";
-import { ChatGPTAPI } from "chatgpt";
+import { Configuration, OpenAIApi } from "openai";
 import Child from "./child";
 import assignmentConverter from "@/app/_utils/AssignmentConverter";
 
@@ -22,6 +22,12 @@ interface TestCaseOutput {
     stdout: string;
     stderr: string;
 }
+
+const configuration = new Configuration({
+    apiKey: process.env.OPENAI_API_KEY,
+});
+
+const openai = new OpenAIApi(configuration);
 
 export default function Page({ params }: { params: { class_slug: string } }) {
     const [user, userLoading] = useAuthState(auth);
@@ -39,7 +45,7 @@ export default function Page({ params }: { params: { class_slug: string } }) {
     const [input, setInput] = useState("");
     const [testCases, setTestCases] = useState<TestCase[]>([]);
     const [passed, setPassed] = useState(0);
-    const prompt = `Create one test case(input only) for the following problem. Only return the test case, with nothing before or after. The problem starts after the dotted line. If there are two or more inputs required, return each of them separated by a comma. Surround each string with double quotes.\n --------------------------------------------------------\n`;
+    const prompt = `Create one test case(input only) for the following problem. Only return the test case, with nothing before or after. The problem starts after the dotted line. If there are two or more inputs required, return each of them separated by a comma. Surround each string with double quotes. Be random with the values.\n --------------------------------------------------------\n`;
     const [newCase, setNewCase] = useState("");
     const [results, setResults] = useState<TestCaseOutput[]>([]);
 
@@ -55,13 +61,7 @@ export default function Page({ params }: { params: { class_slug: string } }) {
     const runningRef = useRef(false);
     const stdoutRef = useRef("");
     const stderrRef = useRef("");
-    const api = new ChatGPTAPI({
-        apiKey: "", // put something here later
-        completionParams: {
-            model: "gpt-3.5-turbo",
-            temperature: 0.1,
-        },
-    });
+
     runningRef.current = isRunning;
     stdoutRef.current = stdout;
     stderrRef.current = stderr;
@@ -80,8 +80,12 @@ export default function Page({ params }: { params: { class_slug: string } }) {
     }, [user, userLoading, snapshot, classLoading]);
 
     const queryGPT = async (question: string) => {
-        const returnCase = await api.sendMessage(`${prompt}${question}`);
-        return returnCase.text;
+        const chat_completion = await openai.createChatCompletion({
+            model: "gpt-3.5-turbo",
+            messages: [{ role: "user", content: `${prompt}${question}` }],
+        });
+
+        setNewCase(chat_completion.data.choices[0]?.message?.content ?? "");
     };
 
     const inputs = () => {
@@ -387,10 +391,8 @@ print(${fcnName}(${input}))
                                             }}
                                         />
                                         <button
-                                            onClick={async () => {
-                                                setNewCase(
-                                                    await queryGPT(desc),
-                                                );
+                                            onClick={() => {
+                                                queryGPT(desc);
                                             }}
                                         >
                                             Generate Case

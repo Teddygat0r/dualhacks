@@ -12,7 +12,7 @@ export default function Class({
 }: MyClass) {
     return (
         <Link href={`/classes/${id}`}>
-            <div className="relative flex w-full py-6 border border-black rounded-lg">
+            <div className="relative flex py-6 border border-black rounded-lg w-[300px]">
                 <Image
                     src="/stacked_waves.svg"
                     alt=""
@@ -20,7 +20,7 @@ export default function Class({
                     width="600"
                     height="400"
                 />
-                <h1 className="z-10 m-auto mx-10 text-4xl font-semibold text-center text-white">
+                <h1 className="z-10 m-auto mx-10 text-2xl font-semibold text-center text-white">
                     {name}
                 </h1>
             </div>

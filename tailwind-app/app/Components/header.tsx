@@ -7,24 +7,23 @@ const Auth = dynamic(() => import("./login"), {
 export default function Header() {
     return (
         <>
-            <title>LearnMentor Connect</title>
-            <div className="flex flex-row flex-initial h-24">
+            <div className="flex flex-row flex-initial h-24 bg-slate-300">
                 <div>
                     <a href="/">
                         <Image
                             height="80"
                             width="80"
                             alt="W logo"
-                            src="/WebsiteLogo.png"
+                            src="/logo.png"
                         ></Image>
                     </a>
                 </div>
                 <div className="pl-5 my-auto mr-auto">
-                    <a href="/" className="text-[40px]">
-                        <b>LearnMentor Connect</b>
+                    <a href="/" className="text-lg">
+                        <b>ByTech</b>
                     </a>
                 </div>
-                <div className="pr-6 my-auto ml-auto text-[30px]">
+                <div className="pr-6 my-auto ml-auto text-base">
                     <Auth red="/classes"></Auth>
                 </div>
             </div>
