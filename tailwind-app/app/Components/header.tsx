@@ -14,7 +14,7 @@ export default function Header() {
                             height="80"
                             width="80"
                             alt="W logo"
-                            src="/logo.png"
+                            src="/mlogo.png"
                         ></Image>
                     </a>
                 </div>
