@@ -1,6 +1,9 @@
+import dynamic from "next/dynamic";
 import Image from "next/image";
 import { useAuthState } from "react-firebase-hooks/auth";
-import Auth from "./login";
+const Auth = dynamic(() => import("./login"), {
+    ssr: false,
+});
 export default function Header() {
     return (
         <>
